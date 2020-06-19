@@ -4,6 +4,7 @@
 
 import { Injectable, Inject, PLATFORM_ID, InjectionToken } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {CookieOptions} from "./cookie-options";
 
 @Injectable({
   providedIn: 'root',
@@ -79,7 +80,7 @@ export class CookieService {
   }
 
   /**
-   * @param name     Cookie name
+   * @param nameOrOptions     Cookie name
    * @param value    Cookie value
    * @param expires  Number of days until the cookies expires or an actual `Date`
    * @param path     Cookie path
@@ -88,7 +89,7 @@ export class CookieService {
    * @param sameSite OWASP samesite token `Lax`, `None`, or `Strict`. Defaults to `Lax`
    */
   set(
-    name: string,
+    nameOrOptions: string | CookieOptions,
     value: string,
     expires?: number | Date,
     path?: string,
@@ -99,6 +100,21 @@ export class CookieService {
     if (!this.documentIsAccessible) {
       return;
     }
+
+    if (typeof nameOrOptions !== 'string') {
+      const {
+        name,
+        value,
+        expires,
+        path,
+        domain,
+        secure,
+        sameSite = 'Lax',
+      } = nameOrOptions;
+    } else {
+      const name = nameOrOptions;
+    }
+
 
     let cookieString: string = encodeURIComponent(name) + '=' + encodeURIComponent(value) + ';';
 
